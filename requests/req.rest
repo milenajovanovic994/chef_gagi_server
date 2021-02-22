@@ -1,0 +1,19 @@
+GET http://localhost:3005/recepti
+
+###
+
+GET http://localhost:3005/recepti/2
+
+###
+
+POST http://localhost:3005/recepti
+Content-Type: application/json
+
+{
+    "recept": "nesto10",
+    "autor": "ja"
+}
+
+###
+
+DELETE http://localhost:3005/recepti/2
