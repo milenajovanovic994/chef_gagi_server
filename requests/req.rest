@@ -1,19 +1,20 @@
-GET http://localhost:3005/recepti
+GET http://localhost:3005/users
 
 ###
 
-GET http://localhost:3005/recepti/2
+GET http://localhost:3005/recipes/2
 
 ###
 
-POST http://localhost:3005/recepti
+POST http://localhost:3005/users
 Content-Type: application/json
 
 {
-    "recept": "nesto10",
-    "autor": "ja"
+    "username": "Milenaaa",
+    "password": "6789abcd",
+    "email": "nesto00@gmail.com"
 }
 
 ###
 
-DELETE http://localhost:3005/recepti/2
+DELETE http://localhost:3005/recipes/2

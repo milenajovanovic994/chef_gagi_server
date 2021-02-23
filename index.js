@@ -1,90 +1,162 @@
 import express from 'express'
 import cors from 'cors'
+import CryptoJS from 'crypto-js'
+// import md5 from 'crypto-js/md5.js'
 
 const app = express()
+// const CryptoJS = require("crypto-js")
+
 app.use(express.json())
 app.use(cors())
 
 const logger = (req, _, next) => {
-    console.log('HTTP zahtev: ', req.method)
-    console.log('Putanja: ', req.path)
-    console.log('Telo zahteva: ', req.body)
+    console.log('HTTP request: ', req.method)
+    console.log('Route: ', req.path)
+    console.log('Request body: ', req.body)
     console.log('-----------')
     next()
 }
 
+
 app.use(logger)
 
 const defaultEndpoint = (_, res) => {
-    res.status(404).json({ error: 'Nepoznata putanja' })
+    res.status(404).json({ error: 'Unknown route' })
 }
 
-const RECEPTI = '/recepti'
+const RECIPES = '/recipes'
 
-let recepti = [
+const USERS = '/users'
+
+let recipes = [
     {
         id: 1,
-        recept: 'nesto1',
-        autor: 'Chef Gagi'
+        recipe: 'nesto1',
+        author: 'Chef Gagi',
+        title: 'ime1'
     },
     {
         id: 2,
-        recept: 'nesto2',
-        autor: 'Chef Gagi'
+        recipe: 'nesto2',
+        author: 'Chef Gagi',
+        title: 'ime2'
     },
     {
         id: 3,
-        recept: 'nesto3',
-        autor: 'Chef Gagi'
+        recipe: 'nesto3',
+        author: 'Chef Gagi',
+        title: 'ime3'
     },
     {
         id: 4,
-        recept: 'nesto4',
-        autor: 'Chef Gagi'
+        recipe: 'nesto4',
+        author: 'Chef Gagi',
+        title: 'ime4'
     },
     {
         id: 5,
         recept: 'nesto5',
-        autor: 'Chef Gagi'
+        author: 'Chef Gagi',
+        title: 'ime5'
+    }
+]
+
+let users = [
+    {
+        id: 1,
+        username: 'Milena',
+        password: '12345abcd',
+        email: 'nesto@gmail.com'
+    },
+    {
+        id: 2,
+        username: 'Pera',
+        password: 'abcd12345',
+        email: 'nesto2@gmail.com'
     }
 ]
 
 
-app.get(RECEPTI, (_, res) => {
-    res.status(200).json(recepti)
+app.get(RECIPES, (_, res) => {
+    res.status(200).json(recipes)
 })
 
-app.get(`${RECEPTI}/:id`, (req, res) => {
-    const id = req.params.id
-    const recept = recepti.find(r => r.id == id)
+app.get(USERS, (_, res) => {
+    res.status(200).json(users)
+})
 
-    if (recept)
-        res.json(recept)
+
+app.get(`${RECIPES}/:id`, (req, res) => {
+    const id = req.params.id
+    const recipe = recipes.find(r => r.id == id)
+
+    if (recipe)
+        res.json(recipe)
     else res.status(404).end()
 })
 
-app.post(RECEPTI, (req, res) => {
-    
-    const noviRecept = req.body
+app.get(`${USERS}/:id`, (req, res) => {
+    const id = req.params.id
+    const user = users.find(u => u.id == id)
 
-    if(noviRecept.recept.trim().length === 0 || noviRecept.autor.trim().length === 0){
-        res.status(400).json({ error: 'Polja za recept i ime autora moraju biti popunjeni.' })
+    if (user)
+        res.json(user)
+    else res.status(404).end()
+})
+
+
+app.post(RECIPES, (req, res) => {
+
+    const newRecipe = req.body
+
+    if (newRecipe.recipe.trim().length === 0 || newRecipe.author.trim().length === 0 || newRecipe.title.trim().length === 0) {
+        res.status(400).json({ error: 'All fields must be filled in.' })
         return
     }
 
-    const id = recepti.length > 0 ?
-    Math.max(...recepti.map(recept => recept.id)) + 1
-    : 1
-    noviRecept.id = id
+    const id = recipes.length > 0 ?
+        Math.max(...recipes.map(recipe => recipe.id)) + 1
+        : 1
+    newRecipe.id = id
 
-    recepti.push(noviRecept)
+    recipes.push(newRecipe)
 
-    res.status(201).json(noviRecept)
+    res.status(201).json(newRecipe)
 })
 
-app.delete(`${RECEPTI}/:id`, (req,res) => {
+app.post(USERS, (req, res) => {
+
+    req.body.password = CryptoJS.MD5(req.body.password).toString()
+
+    // console.log(CryptoJS.MD5(req.body.password).toString())
+    const newUser = req.body
+
+    if (newUser.username.trim().length === 0 || newUser.email.trim().length === 0 || newUser.password.trim().length === 0) {
+        res.status(400).json({ error: 'All fields must be filled in.' })
+        return
+    }
+
+    const id = users.length > 0 ?
+        Math.max(...users.map(user => user.id)) + 1
+        : 1
+    newUser.id = id
+
+    users.push(newUser)
+
+    res.status(201).json(newUser)
+})
+
+
+app.delete(`${RECIPES}/:id`, (req, res) => {
     const id = req.params.id
-    recepti = recepti.filter(r => r.id != id)
+    recipes = recipes.filter(r => r.id != id)
+
+    res.status(204).end()
+})
+
+app.delete(`${USERS}/:id`, (req, res) => {
+    const id = req.params.id
+    users = users.filter(u => u.id != id)
 
     res.status(204).end()
 })
@@ -93,5 +165,5 @@ app.use(defaultEndpoint)
 
 const PORT = 3005
 app.listen(PORT, () => {
-    console.log(`Server pokrenut na http://localhost:${PORT}`)
+    console.log(`Server runs at http://localhost:${PORT}`)
 })
