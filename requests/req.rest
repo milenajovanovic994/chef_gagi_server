@@ -10,9 +10,21 @@ POST http://localhost:3005/users
 Content-Type: application/json
 
 {
-    "username": "Milenaaa",
-    "password": "6789abcd",
-    "email": "nesto00@gmail.com"
+    "username": "Gaga",
+    "password": "pass123",
+    "email": "gaga@gmail.com"
+}
+
+
+###
+
+POST http://localhost:3005/users/login
+Content-Type: application/json
+
+{
+    "username": "Gaga",
+    "password": "pass1223",
+    "email": "gaga@gmail.com"
 }
 
 ###

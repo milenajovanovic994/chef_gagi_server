@@ -1,9 +1,12 @@
 import express from 'express'
 import cors from 'cors'
-import CryptoJS from 'crypto-js'
+// import CryptoJS from 'crypto-js'
 // import md5 from 'crypto-js/md5.js'
 
 const app = express()
+
+import bcrypt from 'bcrypt'
+// const bcrypt = require('bcrypt')
 // const CryptoJS = require("crypto-js")
 
 app.use(express.json())
@@ -17,16 +20,23 @@ const logger = (req, _, next) => {
     next()
 }
 
-
 app.use(logger)
 
 const defaultEndpoint = (_, res) => {
     res.status(404).json({ error: 'Unknown route' })
 }
 
+const isUser = (arr, username, email) => {
+    if (arr.find(user => user.username === username || user.email === email)) {
+        return true
+    }
+}
+
 const RECIPES = '/recipes'
 
 const USERS = '/users'
+
+const LOGIN = '/login'
 
 let recipes = [
     {
@@ -55,7 +65,7 @@ let recipes = [
     },
     {
         id: 5,
-        recept: 'nesto5',
+        recipe: 'nesto5',
         author: 'Chef Gagi',
         title: 'ime5'
     }
@@ -124,26 +134,54 @@ app.post(RECIPES, (req, res) => {
     res.status(201).json(newRecipe)
 })
 
-app.post(USERS, (req, res) => {
 
-    req.body.password = CryptoJS.MD5(req.body.password).toString()
 
-    // console.log(CryptoJS.MD5(req.body.password).toString())
-    const newUser = req.body
+app.post(USERS, async (req, res) => {
 
-    if (newUser.username.trim().length === 0 || newUser.email.trim().length === 0 || newUser.password.trim().length === 0) {
-        res.status(400).json({ error: 'All fields must be filled in.' })
+    if (!isUser(users, req.body.username, req.body.email)) {
+
+        // req.body.password = CryptoJS.MD5(req.body.password).toString()
+
+        try {
+            const hashedPassword = await bcrypt.hash(req.body.password, 10)
+
+            const newUser = req.body
+
+            newUser.password = hashedPassword
+
+            const id = users.length > 0 ?
+                Math.max(...users.map(user => user.id)) + 1
+                : 1
+            newUser.id = id
+
+            users.push(newUser)
+            res.status(201).json(newUser)
+        } catch {
+            res.status(500).send()
+        }
+    }
+    else {
+        res.status(400).json({ error: 'User already exists with this username or email.' })
         return
     }
 
-    const id = users.length > 0 ?
-        Math.max(...users.map(user => user.id)) + 1
-        : 1
-    newUser.id = id
+})
 
-    users.push(newUser)
+app.post(`${USERS}${LOGIN}`, async (req, res) => {
+    const user = users.find(user => user.username === req.body.username)
+    if (user == null) {
+        return res.status(400).send('Cannot find user')
+    }
+    try {
+        if (await bcrypt.compare(req.body.password, user.password)) {
+            res.send('Success')
+        } else {
+            res.status(404).send('Not Allowed')
+        }
+    } catch {
+        res.status(500).send()
+    }
 
-    res.status(201).json(newUser)
 })
 
 
