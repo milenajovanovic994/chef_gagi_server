@@ -148,10 +148,12 @@ app.post(RECIPES, (req, res) => {
 
 app.post(USERS, async (req, res) => {
 
-    if (!isUser(users, req.body.username, req.body.email)) {
 
-        // req.body.password = CryptoJS.MD5(req.body.password).toString()
-
+    if(isUser(users, req.body.username, req.body.email)){
+        res.status(400).json({ error: 'User already exists with this username or email.' })
+        return
+    }
+    else{
         try {
             const hashedPassword = await bcrypt.hash(req.body.password, 10)
 
@@ -170,10 +172,33 @@ app.post(USERS, async (req, res) => {
             res.status(500).send()
         }
     }
-    else {
-        res.status(400).json({ error: 'User already exists with this username or email.' })
-        return
-    }
+
+    // if (!isUser(users, req.body.username, req.body.email)) {
+
+    //     // req.body.password = CryptoJS.MD5(req.body.password).toString()
+
+    //     try {
+    //         const hashedPassword = await bcrypt.hash(req.body.password, 10)
+
+    //         const newUser = req.body
+
+    //         newUser.password = hashedPassword
+
+    //         const id = users.length > 0 ?
+    //             Math.max(...users.map(user => user.id)) + 1
+    //             : 1
+    //         newUser.id = id
+
+    //         users.push(newUser)
+    //         res.status(201).json(newUser)
+    //     } catch {
+    //         res.status(500).send()
+    //     }
+    // }
+    // else {
+    //     res.status(400).json({ error: 'User already exists with this username or email.' })
+    //     return
+    // }
 
 })
 
@@ -186,7 +211,7 @@ app.post(`${USERS}${LOGIN}`, async (req, res) => {
         if (await bcrypt.compare(req.body.password, user.password)) {
             res.send('Success')
         } else {
-            res.status(404).send('Not Allowed')
+            res.send('Not Allowed')
             return
 
             // res.status(404).send('Not Allowed')
