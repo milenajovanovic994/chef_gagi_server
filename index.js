@@ -43,31 +43,41 @@ let recipes = [
         id: 1,
         recipe: 'nesto1',
         author: 'Chef Gagi',
-        title: 'ime1'
+        title: 'ime1',
+        ingredients: ['jabuka','narandza','kruska','sljiva','secer'],
+        dishType: 'Sweets'
     },
     {
         id: 2,
         recipe: 'nesto2',
         author: 'Chef Gagi',
-        title: 'ime2'
+        title: 'ime2',
+        ingredients: ['krompir','paradajz','sargarepa','ulje','so'],
+        dishType: 'Baked goods'
     },
     {
         id: 3,
         recipe: 'nesto3',
         author: 'Chef Gagi',
-        title: 'ime3'
+        title: 'ime3',
+        ingredients: ['avokado','brasno','voda'],
+        dishType: 'Fruit dish'
     },
     {
         id: 4,
         recipe: 'nesto4',
         author: 'Chef Gagi',
-        title: 'ime4'
+        title: 'ime4',
+        ingredients: ['cokolada','mleko','secer','gustin'],
+        dishType: 'Sweets'
     },
     {
         id: 5,
         recipe: 'nesto5',
         author: 'Chef Gagi',
-        title: 'ime5'
+        title: 'ime5',
+        ingredients: ['jabuka','narandza','sljiva','secer'],
+        dishType: 'Sweets'
     }
 ]
 
@@ -176,7 +186,7 @@ app.post(`${USERS}${LOGIN}`, async (req, res) => {
         if (await bcrypt.compare(req.body.password, user.password)) {
             res.send('Success')
         } else {
-            res.send('Not Allowed')
+            res.status(404).send('Not Allowed')
             return
 
             // res.status(404).send('Not Allowed')
