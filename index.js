@@ -246,7 +246,7 @@ app.delete(`${USERS}/:id`, (req, res) => {
 
 app.use(defaultEndpoint)
 
-const PORT = 3005
+const PORT = process.env.PORT
 app.listen(PORT, () => {
-    console.log(`Server runs at http://localhost:${PORT}`)
+    console.log(`Server runs at: ${PORT}`)
 })
