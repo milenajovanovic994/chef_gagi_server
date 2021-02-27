@@ -45,7 +45,8 @@ let recipes = [
         author: 'Chef Gagi',
         title: 'ime1',
         ingredients: ['jabuka','narandza','kruska','sljiva','secer'],
-        dishType: 'Sweets'
+        dishType: 'Sweets',
+        img: 'https://res.cloudinary.com/milenajovanovic994/image/upload/v1613997883/samples/food/spices.jpg'
     },
     {
         id: 2,
@@ -53,7 +54,8 @@ let recipes = [
         author: 'Chef Gagi',
         title: 'ime2',
         ingredients: ['krompir','paradajz','sargarepa','ulje','so'],
-        dishType: 'Baked goods'
+        dishType: 'Baked goods',
+        img: 'https://res.cloudinary.com/milenajovanovic994/image/upload/v1613997876/samples/food/pot-mussels.jpg'
     },
     {
         id: 3,
@@ -61,7 +63,8 @@ let recipes = [
         author: 'Chef Gagi',
         title: 'ime3',
         ingredients: ['avokado','brasno','voda'],
-        dishType: 'Fruit dish'
+        dishType: 'Fruit dish',
+        img: 'https://res.cloudinary.com/milenajovanovic994/image/upload/v1613997875/samples/food/fish-vegetables.jpg'
     },
     {
         id: 4,
@@ -69,7 +72,8 @@ let recipes = [
         author: 'Chef Gagi',
         title: 'ime4',
         ingredients: ['cokolada','mleko','secer','gustin'],
-        dishType: 'Sweets'
+        dishType: 'Sweets',
+        img: 'https://res.cloudinary.com/milenajovanovic994/image/upload/v1613997874/samples/food/dessert.jpg'
     },
     {
         id: 5,
@@ -77,7 +81,8 @@ let recipes = [
         author: 'Chef Gagi',
         title: 'ime5',
         ingredients: ['jabuka','narandza','sljiva','secer'],
-        dishType: 'Sweets'
+        dishType: 'Sweets',
+        img: 'https://res.cloudinary.com/milenajovanovic994/image/upload/v1613997870/sample.jpg'
     }
 ]
 
