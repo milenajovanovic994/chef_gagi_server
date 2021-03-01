@@ -224,13 +224,28 @@ app.post(USERS, (req, res) => {
 
     // const hashedPassword = await bcrypt.hash(req.body.password, 10)
 
-    User.findOne({ username: req.body.username }).then(result => {
-        console.log(result)
-        if (result) {
-            res.status(400).json({ error: 'User already exists with this username or email.' })
-            return
-        }
-        else {
+    // User.findOne({
+    //     $or: [
+    //         { email: req.body.email },
+    //         { phone: req.body.phone }
+    //     ]
+    // })
+
+
+
+    User.findOne({
+        $or: [
+            { email: req.body.email },
+            { username: req.body.username }
+        ]
+    })
+        .then(result => {
+            console.log(result)
+            if (result) {
+                res.status(400).json({ error: 'User already exists with this username or email.' })
+                return
+            }
+            else {
 
                 req.body.password = CryptoJS.MD5(req.body.password).toString()
 
@@ -244,12 +259,12 @@ app.post(USERS, (req, res) => {
                 user.save().then(result => {
                     res.json(result)
                 })
-        }
+            }
 
-    }).catch(error => {
-        console.log(error)
-        res.status(404).end()
-    })
+        }).catch(error => {
+            console.log(error)
+            res.status(404).end()
+        })
 
 
 
@@ -314,19 +329,19 @@ app.post(USERS, (req, res) => {
 app.post(`${USERS}${LOGIN}`, async (req, res) => {
     // const user = users.find(user => user.username === req.body.username)
 
-    User.findOne({ username: req.body.username, email: req.body.email }).then(result => {
-        if(result){
-            console.log(result) 
-                if (CryptoJS.MD5(req.body.password).toString() === result.password) {
-                    res.send('Success')
-                } else {
-                    res.send('Not Allowed')
-                    return
-        
-                    // res.status(404).send('Not Allowed')
-                }    
+    User.findOne({ username: req.body.username }).then(result => {
+        if (result) {
+            console.log(result)
+            if (CryptoJS.MD5(req.body.password).toString() === result.password) {
+                res.send('Success')
+            } else {
+                res.send('Not Allowed')
+                return
+
+                // res.status(404).send('Not Allowed')
+            }
         }
-        else{
+        else {
             return res.status(400).send('Cannot find user')
         }
     }).catch(error => {
