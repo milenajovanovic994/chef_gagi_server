@@ -2,9 +2,14 @@ import dotenv from 'dotenv'
 dotenv.config()
 import express from 'express'
 import cors from 'cors'
-import bcrypt from 'bcrypt'
 import mongoose from 'mongoose'
 import CryptoJS from 'crypto-js'
+
+// heroku config:set MONGODB_URI=mongodb+srv://milenajovanovic994:bHCSTmj8ETYx4yba@cluster0.0hhjj.mongodb.net/chefGagiApp?retryWrites=true&w=majority
+
+//  heroku config:set GITHUB_USERNAME=joesmith
+
+
 
 const url = process.env.MONGODB_URI
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
