@@ -29,8 +29,18 @@ const userSchema = new mongoose.Schema({
     email: String
 })
 
+const recipeUserSchema = new mongoose.Schema({
+    recipe: String,
+    author: String,
+    title: String,
+    ingredients: Array,
+    dishType: String,
+    img: String
+})
+
 const Recipe = mongoose.model('Recipe', recipeSchema)
 const User = mongoose.model('User', userSchema)
+const RecipeUser = mongoose.model('RecipeUser', recipeUserSchema)
 
 const app = express()
 
@@ -51,80 +61,14 @@ const defaultEndpoint = (_, res) => {
     res.status(404).json({ error: 'Unknown route' })
 }
 
-const isUser = (arr, username, email) => {
-    if (arr.find(user => user.username === username || user.email === email)) {
-        return true
-    }
-}
-
 const RECIPES = '/recipes'
+
+const COMMUNITY = '/community'
 
 const USERS = '/users'
 
 const LOGIN = '/login'
 
-// let recipes = [
-//     {
-//         id: 1,
-//         recipe: 'nesto1',
-//         author: 'Chef Gagi',
-//         title: 'ime1',
-//         ingredients: ['jabuka','narandza','kruska','sljiva','secer'],
-//         dishType: 'Sweets',
-//         img: 'https://res.cloudinary.com/milenajovanovic994/image/upload/v1613997883/samples/food/spices.jpg'
-//     },
-//     {
-//         id: 2,
-//         recipe: 'nesto2',
-//         author: 'Chef Gagi',
-//         title: 'ime2',
-//         ingredients: ['krompir','paradajz','sargarepa','ulje','so'],
-//         dishType: 'Baked goods',
-//         img: 'https://res.cloudinary.com/milenajovanovic994/image/upload/v1613997876/samples/food/pot-mussels.jpg'
-//     },
-//     {
-//         id: 3,
-//         recipe: 'nesto3',
-//         author: 'Chef Gagi',
-//         title: 'ime3',
-//         ingredients: ['avokado','brasno','voda'],
-//         dishType: 'Fruit dish',
-//         img: 'https://res.cloudinary.com/milenajovanovic994/image/upload/v1613997875/samples/food/fish-vegetables.jpg'
-//     },
-//     {
-//         id: 4,
-//         recipe: 'nesto4',
-//         author: 'Chef Gagi',
-//         title: 'ime4',
-//         ingredients: ['cokolada','mleko','secer','gustin'],
-//         dishType: 'Sweets',
-//         img: 'https://res.cloudinary.com/milenajovanovic994/image/upload/v1613997874/samples/food/dessert.jpg'
-//     },
-//     {
-//         id: 5,
-//         recipe: 'nesto5',
-//         author: 'Chef Gagi',
-//         title: 'ime5',
-//         ingredients: ['jabuka','narandza','sljiva','secer'],
-//         dishType: 'Sweets',
-//         img: 'https://res.cloudinary.com/milenajovanovic994/image/upload/v1613997870/sample.jpg'
-//     }
-// ]
-
-// let users = [
-//     {
-//         id: 1,
-//         username: 'Milena',
-//         password: '12345abcd',
-//         email: 'nesto@gmail.com'
-//     },
-//     {
-//         id: 2,
-//         username: 'Pera',
-//         password: 'abcd12345',
-//         email: 'nesto2@gmail.com'
-//     }
-// ]
 
 
 app.get(RECIPES, (_, res) => {
@@ -132,8 +76,13 @@ app.get(RECIPES, (_, res) => {
     Recipe.find({}).then(result => {
         res.json(result)
     })
+})
 
-    // res.status(200).json(recipes)
+app.get(COMMUNITY, (_, res) => {
+
+    RecipeUser.find({}).then(result => {
+        res.json(result)
+    })
 })
 
 app.get(USERS, (_, res) => {
@@ -148,7 +97,6 @@ app.get(USERS, (_, res) => {
 
 app.get(`${RECIPES}/:id`, (req, res) => {
     const id = req.params.id
-    // const recipe = recipes.find(r => r.id == id)
 
     Recipe.findById(id).then(recipe => {
         if (recipe) res.json(recipe)
@@ -158,19 +106,10 @@ app.get(`${RECIPES}/:id`, (req, res) => {
             console.log(error)
             res.status(500).end()
         })
-
-    // if (recipe)
-    //     res.json(recipe)
-    // else res.status(404).end()
 })
 
 app.get(`${USERS}/:id`, (req, res) => {
     const id = req.params.id
-    // const user = users.find(u => u.id == id)
-
-    // if (user)
-    //     res.json(user)
-    // else res.status(404).end()
 
     User.findById(id).then(user => {
         if (user) res.json(user)
@@ -180,7 +119,6 @@ app.get(`${USERS}/:id`, (req, res) => {
             console.log(error)
             res.status(500).end()
         })
-
 })
 
 
@@ -203,6 +141,23 @@ app.post(RECIPES, (req, res) => {
     // res.status(201).json(newRecipe)
 
     const recipe = new Recipe({
+        recipe: req.body.recipe,
+        author: req.body.author,
+        title: req.body.title,
+        ingredients: req.body.ingredients,
+        dishType: req.body.dishType,
+        img: req.body.img
+    })
+
+    recipe.save().then(result => {
+        res.json(result)
+    })
+})
+
+app.post(COMMUNITY, (req, res) => {
+
+
+    const recipe = new RecipeUser({
         recipe: req.body.recipe,
         author: req.body.author,
         title: req.body.title,
@@ -374,6 +329,13 @@ app.post(`${USERS}${LOGIN}`, async (req, res) => {
 
 
 app.delete(`${RECIPES}/:id`, (req, res) => {
+    const id = req.params.id
+    recipes = recipes.filter(r => r.id != id)
+
+    res.status(204).end()
+})
+
+app.delete(`${COMMUNITY}/:id`, (req, res) => {
     const id = req.params.id
     recipes = recipes.filter(r => r.id != id)
 
