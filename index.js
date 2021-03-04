@@ -5,7 +5,7 @@ import cors from 'cors'
 import mongoose from 'mongoose'
 import CryptoJS from 'crypto-js'
 
-const url =  'mongodb+srv://milenajovanovic994:bHCSTmj8ETYx4yba@cluster0.0hhjj.mongodb.net/chefGagiApp?retryWrites=true&w=majority'
+const url = process.env.MONGODB_URI
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
 
 const recipeSchema = new mongoose.Schema({
@@ -231,7 +231,7 @@ app.delete(`${USERS}/:id`, (req, res) => {
 
 app.use(defaultEndpoint)
 
-const PORT = 3005
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server runs at: ${PORT}`)
 })
