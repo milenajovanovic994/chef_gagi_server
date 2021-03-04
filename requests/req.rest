@@ -29,4 +29,15 @@ Content-Type: application/json
 
 ###
 
-DELETE http://localhost:3005/recipes/2
+POST http://localhost:3005/recipes
+Content-Type: application/json
+
+{
+    "recipe": "Flat the chicken breasts and put in all of the stuffing (bread crumbs, dried cranberries, egg yolk, olive oil, garlic, chives
+",
+    "author": "Chef Gagi",
+    "title": "Chicken roulade with cranberries",
+    "ingredients": ["chicken breasts - 300 gr","bread crumbs - 25 gr"],
+    "dishType": "Meat recipe",
+    "img": "https://res.cloudinary.com/milenajovanovic994/image/upload/v1614818489/projekat/Gagi/cooking/3_bdj0i7.jpg"
+}

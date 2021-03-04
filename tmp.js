@@ -1,6 +1,4 @@
-// bHCSTmj8ETYx4yba
 
-// mongodb+srv://milenajovanovic994:bHCSTmj8ETYx4yba@cluster0.0hhjj.mongodb.net/chefGagiApp?retryWrites=true&w=majority
 
 import mongoose from 'mongoose'
 

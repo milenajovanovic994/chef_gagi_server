@@ -5,12 +5,6 @@ import cors from 'cors'
 import mongoose from 'mongoose'
 import CryptoJS from 'crypto-js'
 
-// heroku config:set MONGODB_URI=mongodb+srv://milenajovanovic994:bHCSTmj8ETYx4yba@cluster0.0hhjj.mongodb.net/chefGagiApp?retryWrites=true&w=majority
-
-//  heroku config:set GITHUB_USERNAME=joesmith
-
-
-
 const url = process.env.MONGODB_URI
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
 
@@ -90,8 +84,6 @@ app.get(USERS, (_, res) => {
     User.find({}).then(result => {
         res.json(result)
     })
-
-    // res.status(200).json(users)
 })
 
 
@@ -123,22 +115,6 @@ app.get(`${USERS}/:id`, (req, res) => {
 
 
 app.post(RECIPES, (req, res) => {
-
-    // const newRecipe = req.body
-
-    // if (newRecipe.recipe.trim().length === 0 || newRecipe.author.trim().length === 0 || newRecipe.title.trim().length === 0) {
-    //     res.status(400).json({ error: 'All fields must be filled in.' })
-    //     return
-    // }
-
-    // const id = recipes.length > 0 ?
-    //     Math.max(...recipes.map(recipe => recipe.id)) + 1
-    //     : 1
-    // newRecipe.id = id
-
-    // recipes.push(newRecipe)
-
-    // res.status(201).json(newRecipe)
 
     const recipe = new Recipe({
         recipe: req.body.recipe,
@@ -175,24 +151,6 @@ app.post(COMMUNITY, (req, res) => {
 
 app.post(USERS, (req, res) => {
 
-
-    // if (isUser(users, req.body.username, req.body.email)) {
-    //     res.status(400).json({ error: 'User already exists with this username or email.' })
-    //     return
-    // }
-    // else {
-
-    // const hashedPassword = await bcrypt.hash(req.body.password, 10)
-
-    // User.findOne({
-    //     $or: [
-    //         { email: req.body.email },
-    //         { phone: req.body.phone }
-    //     ]
-    // })
-
-
-
     User.findOne({
         $or: [
             { email: req.body.email },
@@ -225,69 +183,9 @@ app.post(USERS, (req, res) => {
             console.log(error)
             res.status(404).end()
         })
-
-
-
-    // try {
-    //     const hashedPassword = await bcrypt.hash(req.body.password, 10)
-
-    //     const user = new User({
-    //         username: req.body.username,
-    //         password: hashedPassword,
-    //         email: req.body.email
-    //     })
-
-    //     user.save().then(result => {
-    //         res.json(result)
-    //     })
-
-    // const newUser = req.body
-
-    // newUser.password = hashedPassword
-
-    // const id = users.length > 0 ?
-    //     Math.max(...users.map(user => user.id)) + 1
-    //     : 1
-    // newUser.id = id
-
-    // users.push(newUser)
-    // res.status(201).json(newUser)
-    // } catch {
-    //     res.status(500).send()
-    // }
-    // }
-
-    // if (!isUser(users, req.body.username, req.body.email)) {
-
-    //     // req.body.password = CryptoJS.MD5(req.body.password).toString()
-
-    //     try {
-    //         const hashedPassword = await bcrypt.hash(req.body.password, 10)
-
-    //         const newUser = req.body
-
-    //         newUser.password = hashedPassword
-
-    //         const id = users.length > 0 ?
-    //             Math.max(...users.map(user => user.id)) + 1
-    //             : 1
-    //         newUser.id = id
-
-    //         users.push(newUser)
-    //         res.status(201).json(newUser)
-    //     } catch {
-    //         res.status(500).send()
-    //     }
-    // }
-    // else {
-    //     res.status(400).json({ error: 'User already exists with this username or email.' })
-    //     return
-    // }
-
 })
 
 app.post(`${USERS}${LOGIN}`, async (req, res) => {
-    // const user = users.find(user => user.username === req.body.username)
 
     User.findOne({ username: req.body.username }).then(result => {
         if (result) {
@@ -297,8 +195,6 @@ app.post(`${USERS}${LOGIN}`, async (req, res) => {
             } else {
                 res.send('Not Allowed')
                 return
-
-                // res.status(404).send('Not Allowed')
             }
         }
         else {
@@ -308,25 +204,9 @@ app.post(`${USERS}${LOGIN}`, async (req, res) => {
         console.log(error)
         res.status(500).end()
     })
-
-    // if (user == null) {
-    //     return res.status(400).send('Cannot find user')
-    // }
-    // try {
-    //     if (await bcrypt.compare(req.body.password, user.password)) {
-    //         res.send('Success')
-    //     } else {
-    //         res.send('Not Allowed')
-    //         return
-
-    //         // res.status(404).send('Not Allowed')
-    //     }
-    // } catch {
-    //     res.status(500).send()
-    // }
-
 })
 
+// Plan to adding delete button, when I create Admin
 
 app.delete(`${RECIPES}/:id`, (req, res) => {
     const id = req.params.id
